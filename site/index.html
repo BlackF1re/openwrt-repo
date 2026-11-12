@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Signed OpenWrt APK feed for Beszel Agent.">
+  <title>BlackF1re OpenWrt packages</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+    body { max-width: 48rem; margin: 4rem auto; padding: 0 1.25rem; line-height: 1.6; }
+    code { overflow-wrap: anywhere; }
+    pre { padding: 1rem; border: 1px solid #8886; border-radius: .5rem; overflow-x: auto; }
+    a { color: inherit; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>BlackF1re OpenWrt packages</h1>
+    <p>Signed APK repository for OpenWrt 25.12 and later.</p>
+    <h2>Beszel Agent</h2>
+    <p>Upstream release: <strong>VERSION_PLACEHOLDER</strong></p>
+    <pre><code>wget -qO- https://blackf1re.github.io/openwrt-repo/subscribe.sh | sh
+apk add beszel-agent</code></pre>
+    <p>Update with <code>apk update &amp;&amp; apk upgrade beszel-agent</code>.</p>
+    <p>Supported architectures: <code>aarch64_cortex-a53</code> and <code>mipsel_24kc</code>.</p>
+    <p><a href="https://github.com/BlackF1re/openwrt-repo">Source repository and instructions</a></p>
+  </main>
+</body>
+</html>

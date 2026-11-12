@@ -1,0 +1,7 @@
+/dist/
+/out/
+/owfeed.lock
+/OWFEED_SIGN_KEY.pem
+/*.sec
+/*.key
+.DS_Store

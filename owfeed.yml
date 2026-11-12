@@ -1,0 +1,26 @@
+version: 1
+
+feed:
+  name: blackf1re-openwrt
+  url: https://blackf1re.github.io/openwrt-repo/
+  title: BlackF1re OpenWrt packages
+  maintainer: "BlackF1re <55582873+BlackF1re@users.noreply.github.com>"
+  license: MIT
+  homepage: https://github.com/BlackF1re/openwrt-repo
+
+releases:
+  - line: "25.12"
+    default: true
+    format: apk
+    arches: auto
+
+signing:
+  key: env:OWFEED_SIGN_KEY
+  sign-packages: true
+
+publish:
+  - target: github-pages
+
+# Beszel packages arrive prebuilt and are verified by fetch-upstream.sh.
+# Do not rebuild the upstream APKs here.
+packages: []
