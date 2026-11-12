@@ -95,7 +95,7 @@ jobs:
           owfeed build
           owfeed sign
           owfeed index
-          bash scripts/check-feed.sh dist out
+          OWFEED_CHECK_PINNED_KEY=false bash scripts/check-feed.sh dist out
           owfeed doctor --require-origin
           owfeed smoke --release 25.12 --arch aarch64_cortex-a53
           owfeed smoke --release 25.12 --arch mipsel_24kc

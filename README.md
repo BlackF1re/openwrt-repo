@@ -18,7 +18,9 @@ Requires **OpenWrt 25.12 or later** (APK package manager).
 Run as `root`:
 
 ```sh
-wget -qO- https://blackf1re.github.io/openwrt-repo/subscribe.sh | sh
+wget -O /tmp/blackf1re-openwrt-subscribe.sh https://blackf1re.github.io/openwrt-repo/subscribe.sh &&
+test -s /tmp/blackf1re-openwrt-subscribe.sh &&
+sh /tmp/blackf1re-openwrt-subscribe.sh
 ```
 
 This installs the feed's public signing key, registers the repository and refreshes the package indexes.

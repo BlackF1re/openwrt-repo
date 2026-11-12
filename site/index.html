@@ -19,7 +19,9 @@
     <p>Signed APK repository for OpenWrt 25.12 and later.</p>
     <h2>Beszel Agent</h2>
     <p>Upstream release: <strong>VERSION_PLACEHOLDER</strong></p>
-    <pre><code>wget -qO- https://blackf1re.github.io/openwrt-repo/subscribe.sh | sh
+    <pre><code>wget -O /tmp/blackf1re-openwrt-subscribe.sh https://blackf1re.github.io/openwrt-repo/subscribe.sh &&
+test -s /tmp/blackf1re-openwrt-subscribe.sh &&
+sh /tmp/blackf1re-openwrt-subscribe.sh &&
 apk add beszel-agent</code></pre>
     <p>Update with <code>apk update &amp;&amp; apk upgrade beszel-agent</code>.</p>
     <p>Supported architectures: <code>aarch64_cortex-a53</code> and <code>mipsel_24kc</code>.</p>

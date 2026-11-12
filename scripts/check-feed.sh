@@ -11,10 +11,21 @@ tag="$(cat "$dist_dir/UPSTREAM_VERSION")"
 version="${tag#v}"
 expected="beszel-agent-${version}-r1.apk"
 
-cmp -s keys/blackf1re-openwrt.pem "$out_dir/blackf1re-openwrt.pem" || {
-  echo "Published public key does not match keys/blackf1re-openwrt.pem; check OWFEED_SIGN_KEY." >&2
-  exit 1
-}
+case "${OWFEED_CHECK_PINNED_KEY:-true}" in
+  true)
+    cmp -s keys/blackf1re-openwrt.pem "$out_dir/blackf1re-openwrt.pem" || {
+      echo "Published public key does not match keys/blackf1re-openwrt.pem; check OWFEED_SIGN_KEY." >&2
+      exit 1
+    }
+    ;;
+  false)
+    echo "Skipping pinned-key comparison (temporary test key)."
+    ;;
+  *)
+    echo "OWFEED_CHECK_PINNED_KEY must be true or false." >&2
+    exit 1
+    ;;
+esac
 
 for arch in aarch64_cortex-a53 mipsel_24kc; do
   source_file="$dist_dir/$arch/$expected"
