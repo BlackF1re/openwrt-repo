@@ -1,68 +1,51 @@
-# Beszel Agent — OpenWrt APK feed
+# OpenWrt Extra Packages
 
-Подписанный APK-репозиторий для **OpenWrt 25.12 и новее**. Пакеты Beszel Agent берутся из официальных GitHub Releases проекта [vernette/beszel-agent-openwrt](https://github.com/vernette/beszel-agent-openwrt), проверяются по опубликованному SHA-256 и публикуются в стандартном формате OpenWrt APK repository.
+A community-maintained APK feed for useful third-party packages that are not available in the official OpenWrt repositories, or are maintained and distributed separately from them.
 
-## Установка на роутер
+<details>
+<summary><strong>Available packages</strong></summary>
 
-Выполнить от `root`:
+| Package | Architecture | Source |
+|---|---|---|
+| `beszel-agent` | `aarch64_cortex-a53`, `mipsel_24kc` | [vernette/beszel-agent-openwrt](https://github.com/vernette/beszel-agent-openwrt) |
+
+</details>
+
+## Add the feed
+
+Requires **OpenWrt 25.12 or later** (APK package manager).
+
+Run as `root`:
 
 ```sh
 wget -qO- https://blackf1re.github.io/openwrt-repo/subscribe.sh | sh
+```
+
+This installs the feed's public signing key, registers the repository and refreshes the package indexes.
+
+## Install and update packages
+
+Install packages by name, as you would from an official repository:
+
+```sh
+apk add <package>
+```
+
+For example, to install **Beszel Agent**:
+
+```sh
 apk add beszel-agent
 ```
 
-Первой командой устанавливается публичный ключ репозитория, добавляется feed и выполняется `apk update`. Вторая устанавливает агент по имени пакета — именно так `apk` сможет обновлять его.
-
-Обновление агента:
+Update an installed package through the feed:
 
 ```sh
 apk update
 apk upgrade beszel-agent
 ```
 
-Или обычное системное обновление всех пакетов:
+Use the package name rather than installing a local `.apk` file. This keeps the package managed by APK and eligible for normal repository updates.
 
-```sh
-apk update && apk upgrade
-```
+## Compatibility
 
-Не устанавливайте `.apk` напрямую из файла. Локальная установка может закрепить хеш содержимого в `/etc/apk/world`, после чего пакет перестанет обновляться из feed.
-
-## Поддерживаемые архитектуры
-
-В feed публикуются сборки:
-
-| OpenWrt architecture | Устройство |
-|---|---|
-| `aarch64_cortex-a53` | Cudy WR3000P |
-| `mipsel_24kc` | MikroTik hEX / RB750Gr3 |
-
-Для обеих архитектур требуется **OpenWrt 25.12+**. Само наличие подходящей архитектуры не означает совместимость со старым пакетным менеджером.
-
-**Важно для MikroTik hEX:** OpenWrt 24.10.5 использует OPKG. Этот репозиторий намеренно APK-only, поэтому на 24.10.5 он не подключится. Для использования сначала необходимо перейти на OpenWrt 25.12 или новее.
-
-## Обновления репозитория
-
-GitHub Actions проверяет upstream-релизы каждые шесть часов. При появлении новой версии workflow:
-
-1. скачивает APK только для поддерживаемых архитектур;
-2. сверяет SHA-256 с digest, опубликованным GitHub Releases API;
-3. проверяет установку на образах OpenWrt 25.12;
-4. подписывает пакеты и индексы репозитория;
-5. публикует обновлённый feed на GitHub Pages.
-
-Установленные роутеры получают новую версию обычным `apk update && apk upgrade`. Ручное скачивание файлов не требуется.
-
-## Доверие и подпись
-
-При подключении feed устанавливается ключ, который разрешает этому репозиторию публиковать пакеты **с любыми именами**, а не только `beszel-agent`. Подключайте его, только если доверяете владельцу репозитория. APK не поддерживает отзыв ключей; потеря закрытого ключа потребует ручной установки нового ключа на каждом роутере.
-
-## Настройка владельцем репозитория
-
-Однократно:
-
-1. Добавить GitHub Actions secret `OWFEED_SIGN_KEY` — содержимое закрытого ключа EC P-256 в формате SEC1 PEM.
-2. В Settings → Pages установить Source: **GitHub Actions**.
-3. Запустить Actions → **Publish Beszel APK feed** вручную для первой публикации.
-
-Закрытый ключ не хранится в Git. В репозитории находится только соответствующий публичный ключ.
+This feed uses the OpenWrt APK repository format and is intended for OpenWrt **25.12+**. A package is available only on the architectures listed for it above.
