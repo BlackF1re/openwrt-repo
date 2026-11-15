@@ -42,7 +42,9 @@ for arch in aarch64_cortex-a53 mipsel_24kc; do
   }
 
   mapfile -t packages < <(find "$package_dir" -maxdepth 1 -type f -name '*.apk' -printf '%f\n' | sort)
-  [[ "${#packages[@]}" -eq 1 && "${packages[0]}" == "$expected" ]] || {
+  [[ "${#packages[@]}" -eq 2 &&
+     "${packages[0]}" == "$expected" &&
+     "${packages[1]}" == blackf1re-openwrt-keyring-*.apk ]] || {
     printf 'Unexpected packages for %s: %s\n' "$arch" "${packages[*]:-none}" >&2
     exit 1
   }
