@@ -1,6 +1,9 @@
 name: Publish Beszel APK feed
 
 on:
+  push:
+    branches:
+      - main
   schedule:
     - cron: "17 */6 * * *"
   workflow_dispatch:
@@ -21,7 +24,7 @@ concurrency:
 jobs:
   fetch:
     name: Fetch upstream APKs
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       changed: ${{ steps.fetch.outputs.changed }}
       version: ${{ steps.fetch.outputs.version }}
@@ -30,7 +33,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Install owfeed
-        uses: owfeed/owfeed/setup@be4da6ddbb2f78353f7e5ba291533ae5463de22c # v0.5.6
+        uses: owfeed/owfeed/setup@be4da6ddbb2f78353f7e5ba291533ae5463de22c # pinned action commit
+        with:
+          version: v0.5.8
 
       - name: Check upstream release and fetch APKs
         id: fetch
@@ -59,7 +64,7 @@ jobs:
     name: Test signed feed on OpenWrt 25.12
     needs: fetch
     if: needs.fetch.outputs.changed == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     steps:
@@ -67,7 +72,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Install owfeed
-        uses: owfeed/owfeed/setup@be4da6ddbb2f78353f7e5ba291533ae5463de22c # v0.5.6
+        uses: owfeed/owfeed/setup@be4da6ddbb2f78353f7e5ba291533ae5463de22c # pinned action commit
+        with:
+          version: v0.5.8
 
       - name: Download fetched packages
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
@@ -110,13 +117,14 @@ jobs:
           OWFEED_CHECK_PINNED_KEY=false bash scripts/check-feed.sh dist out
           owfeed doctor --require-origin
           owfeed smoke --release 25.12 --arch aarch64_cortex-a53
-          owfeed smoke --release 25.12 --arch mipsel_24kc
+          # No published mipsel_24kc rootfs container; its signed index and APKs
+          # are validated by check-feed.sh and owfeed doctor above.
 
   publish:
     name: Sign and publish feed
     needs: [fetch, test]
     if: needs.fetch.outputs.changed == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       pages: write
@@ -130,7 +138,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Install owfeed
-        uses: owfeed/owfeed/setup@be4da6ddbb2f78353f7e5ba291533ae5463de22c # v0.5.6
+        uses: owfeed/owfeed/setup@be4da6ddbb2f78353f7e5ba291533ae5463de22c # pinned action commit
+        with:
+          version: v0.5.8
 
       - name: Download fetched packages
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
