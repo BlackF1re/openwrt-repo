@@ -88,6 +88,18 @@ jobs:
             echo "OWFEED_TEST_KEY_EOF"
           } >> "$GITHUB_ENV"
 
+      - name: Enable QEMU emulation for ARM64 and MIPS little-endian
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends qemu-user-static
+          sudo systemctl restart systemd-binfmt
+          for arch in aarch64 mipsel; do
+            rule="/proc/sys/fs/binfmt_misc/qemu-$arch"
+            test -f "$rule"
+            grep -q '^flags:.*F' "$rule"
+          done
+
       - name: Sign and index with temporary key
         run: |
           set -euo pipefail
